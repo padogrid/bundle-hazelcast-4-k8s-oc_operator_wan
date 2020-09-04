@@ -22,7 +22,7 @@ plugins
 apps
 clusters
 docker
-k8s
+#k8s
 pods
 
 # Bundle specifics
@@ -30,6 +30,7 @@ archive
 log
 lib
 desktop
-setenv.sh0
 build
-hazelcast-operator
+k8s/oc_wan/netpol
+k8s/oc_wan/wan1
+k8s/oc_wan/wan2

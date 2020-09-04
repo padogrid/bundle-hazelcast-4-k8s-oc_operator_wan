@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+SCRIPT_DIR="$(cd -P -- "$(dirname -- "$0")" && pwd -P)"
+. $SCRIPT_DIR/.addonenv.sh
+
+EXECUTABLE="`basename $0`"
+
+if [ "$1" == "-?" ]; then
+cat <<EOF
+
+NAME
+   $EXECUTABLE - Configure NetworkPolicy for '$PROJECT_WAN1' and '$PROJECT_WAN2'
+
+SYNOPSIS
+   $EXECUTABLE wan1|wan2 [storage_class] [-?]
+
+DESCRIPTION
+   ConfigureiNetworkPolicy for '$PROJECT_WAN1' and '$PROJECT_WAN2'.
+
+SEE ALSO
+   netpol/
+
+EOF
+exit
+fi
+
+oc label namespace $PROJECT_WAN1 hazelcast=true
+oc label namespace $PROJECT_WAN2 hazelcast=true
+
+oc create -f $APP_DIR/netpol/wan1-netpol.yaml
+oc create -f $APP_DIR/netpol/wan2-netpol.yaml
