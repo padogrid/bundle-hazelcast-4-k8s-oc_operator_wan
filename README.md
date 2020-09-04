@@ -246,7 +246,7 @@ WAN2: http://hz-hazelcast-enterprise-mancenter-wan2.apps.7919-681139.cor00005-2.
 
 Open the browser with both Mangement Center URLs and login. Place the brower windows side by side and monitor the WAN replication activities.
 
-## 6. Start PadoGrid
+## 7. Start PadoGrid
 
 Start PadoGrid in the `$PROJECT_WAN1` project. We will use PadoGrid to ingest data into the **wan1** cluster, which in turn will replicate the data to the **wan2** cluster. 
 

@@ -8,22 +8,21 @@ if [ "$HELP" == "true" ]; then
 cat <<EOF
 
 NAME
-   $EXECUTABLE - Delete all resrouces
+   $EXECUTABLE - Delete all resources
 
 SYNOPSIS
    $EXECUTABLE wan1|wan2 [-all] [-?]
 
 DESCRIPTION
-   Deletes all but persistent claim resources. To delete persistent claims and 'local-storage'
-   specify the '-all' option.
+   Deletes all but persistent claim resources. To delete pvc, pv, and storage, specify the '-all' option.
 
 OPTIONS
    wan1|wan2
              This option is required. 'wan1' cleans up resources in the '$PROJECT_WAN1' project and 
              'wan2' cleans up resources in the '$PROJECT_WAN2' project.
 
-SEE ALSO
-   wan1/hazelcast/, wan2/hazelast/
+   -all
+             If specified then it also deletes pvc, pv, and storage.
 
 EOF
 exit
@@ -41,27 +40,5 @@ else
    NAMESPACE=$PROJECT_WAN2
 fi
 
-# Delete PadoGrid
-echo "Deleting PadoGrid..."
-oc delete all --namespace=$NAMESPACE -l app=padogrid
-
-# Delete Hazelcast
-echo "Deleting Hazelcast resources..."
-pushd $APP_DIR/$WAN/hazelcast > /dev/null
-oc delete -f hazelcast.yaml
-oc delete -f secret.yaml
-oc delete -f operator-rhel.yaml
-# Patch required. Otherwise, CRD delete will hang.
-oc patch --namespace=$NAMESPACE crd/hazelcastenterprises.hazelcast.com -p '{"metadata":{"finalizers":[]}}' --type=merge
-oc delete -f hazelcastcluster.crd.yaml
-oc delete -f hazelcast-rbac.yaml
-oc delete -f operator-rbac.yaml
-popd > /dev/null
-
-# Delete the rest if ALL specified
-if [ "$ALL" == "true" ]; then
-   echo "Deleting pvc, pv, storage..."
-   oc delete --namespace=$NAMESPACE pvc padogrid-pvc
-   oc delete --namespace=$NAMESPACE pvc mancenter-storage-hz-hazelcast-enterprise-mancenter-0
-   oc delete -f $APP_DIR/padogrid/pv-hostPath.yaml
-fi
+./stop_padogrid $*
+./stop_hazelcast $*

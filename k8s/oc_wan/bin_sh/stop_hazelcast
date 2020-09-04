@@ -11,11 +11,14 @@ NAME
    $EXECUTABLE - Delete all resrouces
 
 SYNOPSIS
-   $EXECUTABLE [-all] [-?]
+   $EXECUTABLE wan1|wan2 [-all] [-?]
 
 DESCRIPTION
    Deletes all Hazelccast resources but the management persistent claim. To delete the persistent claim,
    specify the '-all' option.
+
+   -all
+             If specified then it also deletes pvc.
 
 EOF
 exit
@@ -33,16 +36,21 @@ else
    NAMESPACE=$PROJECT_WAN2
 fi
 
+echo ""
+echo "WAN=$WAN"
+echo "NAMESPACE=$NAMESPACE"
+echo ""
+
 echo "Deleting Hazelcast resources..."
 pushd $APP_DIR/$WAN/hazelcast > /dev/null
-oc delete -f hazelcast.yaml
-oc delete -f secret.yaml
-oc delete -f operator-rhel.yaml
+oc delete --namespace=$NAMESPACE -f hazelcast.yaml
+oc delete --namespace=$NAMESPACE -f secret.yaml
+oc delete --namespace=$NAMESPACE -f operator-rhel.yaml
 # Patch required. Otherwise, CRD delete will hang.
 oc patch --namespace=$NAMESPACE crd/hazelcastenterprises.hazelcast.com -p '{"metadata":{"finalizers":[]}}' --type=merge
-oc delete -f hazelcastcluster.crd.yaml
-oc delete -f hazelcast-rbac.yaml
-oc delete -f operator-rbac.yaml
+oc delete --namespace=$NAMESPACE -f hazelcastcluster.crd.yaml
+oc delete --namespace=$NAMESPACE -f hazelcast-rbac.yaml
+oc delete --namespace=$NAMESPACE -f operator-rbac.yaml
 popd > /dev/null
 
 # Delete the rest if ALL specified

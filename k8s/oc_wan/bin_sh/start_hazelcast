@@ -34,11 +34,22 @@ if [ "$WAN" != "wan1" ] && [ "$WAN" != "wan2" ]; then
    exit 1
 fi
 
+if [ "$WAN" == "wan1" ]; then
+   NAMESPACE=$PROJECT_WAN1
+else
+   NAMESPACE=$PROJECT_WAN2
+fi
+
+echo ""
+echo "WAN=$WAN"
+echo "NAMESPACE=$NAMESPACE"
+echo ""
+
 pushd $APP_DIR/$WAN/hazelcast > /dev/null
-oc apply -f operator-rbac.yaml
-oc apply -f hazelcast-rbac.yaml
-oc apply -f hazelcastcluster.crd.yaml
-oc apply -f operator-rhel.yaml
-oc apply -f secret.yaml
-oc apply -f hazelcast.yaml
+oc apply --namespace=$NAMESPACE -f operator-rbac.yaml
+oc apply --namespace=$NAMESPACE -f hazelcast-rbac.yaml
+oc apply --namespace=$NAMESPACE -f hazelcastcluster.crd.yaml
+oc apply --namespace=$NAMESPACE -f operator-rhel.yaml
+oc apply --namespace=$NAMESPACE -f secret.yaml
+oc apply --namespace=$NAMESPACE -f hazelcast.yaml
 popd > /dev/null
