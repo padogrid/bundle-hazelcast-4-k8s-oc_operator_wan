@@ -322,6 +322,9 @@ exit
 
 ```bash
 cd_k8s oc_wan; cd bin_sh
+
+# Cleanup all. This command hangs while deleting customeresourcedefinition (crd) thne
+# run it again.
 ./cleanup -all
 
 # Delete projects
