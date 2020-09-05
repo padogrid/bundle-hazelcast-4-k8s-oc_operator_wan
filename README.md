@@ -19,6 +19,8 @@ install_bundle -download bundle-hazelcast-4-k8s-oc_wan
 - PadoGrid 0.9.3-SNAPSHOT+ (09/03/2020)
 - OpenShift Client, **oc**
 
+:exclamation: This bundle depends on `redhat/openshift-ovs-networkpolicy`, to create **NetworkPolicy** objects for enabling communications between projects. Please see [1] and [2] for details.
+
 ## Directory Tree View
 
 ```console
@@ -113,14 +115,12 @@ We need to setup cluster-level objects to enable project-to-project communicatio
 - Apply **CustomResourceDefintion** for Hazelcast Operator
 - Apply **ClusterRole** for Hazelcast Operator and Hazelcast
 
-:memo: UKCloud supports `redhat/openshift-ovs-networkpolicy`, which allows communications between projects. Please see [1] and [2] for details.
-
 ```bash
 cd_k8s oc_wan; cd bin_sh
 ./init_cluster
 ```
 
-You can view the NetworkPolicy objects as follows.
+You can view the **NetworkPolicy** objects as follows.
 
 ```bash
 # Verify the cluster has 'ovs-networkpolicy'
