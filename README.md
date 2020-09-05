@@ -300,6 +300,15 @@ Open the browser with both Mangement Center URLs and login. Place the brower win
 
 Start PadoGrid in the `$PROJECT_WAN1` project. We will use PadoGrid to ingest data into the **wan1** cluster, which in turn will replicate the data to the **wan2** cluster. 
 
+### CRC Users
+
+```bash
+cd_k8s oc_wan; cd bin_sh
+./start_padogrid wan1 local-storage
+```
+
+### OCP Users
+
 ```bash
 cd_k8s oc_wan; cd bin_sh
 ./start_padogrid wan1
@@ -331,19 +340,41 @@ Replace the `<cluster-members>` element with the following in the `etc/hazelcast
                 </kubernetes>
 ```
 
-Ingest blob data into Hazelcast in `$PROJECT_WAN1`.
+### Eligibility and Profile
+
+Ingest eligibility and profile blobs into Hazelcast in `$PROJECT_WAN1`.
 
 ```bash
 cd_app perf_test; cd bin_sh
 ./test_ingestion -run
 ```
 
-Read ingested data from Hazelcast in `$PROJECT_WAN1`.
+Read ingested eligibility and profile blobs from Hazelcast in `$PROJECT_WAN1`.
 
 ```bash
 cd_app perf_test; cd bin_sh
 ./read_cache eligibility
 ./read_cache profile
+```
+
+### Customer and Order
+
+If you want to ingest additional data that are not blobs, then first build the `perf_test` and run `test_group` as shown below.
+
+Ingest customers and orders into Hazelcast in `$PROJECT_WAN1`.
+
+```bash
+cd_app perf_test; cd bin_sh
+./build_app
+./test_group -run -prop ../etc/group-factory.properties
+```
+
+Read ingested customers and orders from Hazelcast in `$PROJECT_WAN1`.
+
+```bash
+cd_app perf_test; cd bin_sh
+./read_cache nw/customers
+./read_cache nw/orders
 ```
 
 Exit from the PadoGrid pod.

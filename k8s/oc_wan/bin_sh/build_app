@@ -35,6 +35,7 @@ IMDG_LICENSE_KEY_BASE64=$(echo -n "$IMDG_LICENSE_KEY" | base64)
 if [ ! -d $APP_DIR/cluster ]; then
    mkdir $APP_DIR/cluster
 fi
+cp $APP_DIR/templates/cluster/pv-hostPath.yaml $APP_DIR/cluster
 cp $APP_DIR/templates/cluster/hazelcastcluster.crd.yaml $APP_DIR/cluster
 cp $APP_DIR/templates/cluster/operator-rbac.yaml $APP_DIR/cluster
 cp $APP_DIR/templates/cluster/hazelcast-rbac.yaml $APP_DIR/cluster
