@@ -1,6 +1,6 @@
 # Bundle Template
 
-This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) clusters running on OpenShift.
+This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) Hazlecast clusters running on OpenShift.
 
 ## Installing Bundle
 
@@ -10,7 +10,7 @@ install_bundle -download bundle-hazelcast-4-k8s-oc_wan
 
 ## Use Case
 
-[Enter detailed use case descriptions including one or more diagrams.]
+This bundle installs PadoGrid and Hazelcast containers in two separate projects with WAN replication enabled. As shown in the diagram below, PadoGrid is used to ingest data into the first cluster named **wan1** which in turn publishes data to the second cluster named **wan2**. It includes scripts for starting and stopping containers per project.
 
 ![OC WAN Diagram](/images/oc-wan.jpg)
 
