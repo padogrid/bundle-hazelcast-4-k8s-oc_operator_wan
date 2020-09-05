@@ -10,7 +10,6 @@
 	<baseDirectory>${project.name}</baseDirectory>
 
 	<fileSets>
-		<!-- @template: Enter fileSet per component, i.e., app, cluster, docker, k8s, pod -->
 		<fileSet>
 			<directory>k8s</directory>
 			<outputDirectory>k8s</outputDirectory>
@@ -19,11 +18,10 @@
 			</includes>
 		</fileSet>
 		
-		<!-- @template: Set executable permissions to all scripts here for each fileSet. -->
 		<!-- Executable permissions -->
 		<fileSet>
-			<directory>k8s/oc_operator/bin_sh/</directory>
-			<outputDirectory>k8s/k8s_template/bin_sh/</outputDirectory>
+			<directory>k8s/oc_wan/bin_sh/</directory>
+			<outputDirectory>k8s/oc_wan/bin_sh/</outputDirectory>
 			<includes>
 				<include>**</include>
 			</includes>
