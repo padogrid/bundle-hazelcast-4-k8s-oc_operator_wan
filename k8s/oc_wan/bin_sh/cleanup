@@ -46,6 +46,7 @@ if [ "$ALL" == "true" ]; then
    # Patch required. Otherwise, CRD delete will hang.
    oc patch crd/hazelcastenterprises.hazelcast.com -p '{"metadata":{"finalizers":[]}}' --type=merge
    oc delete -f hazelcastcluster.crd.yaml
+   oc delete -f pv-hostPath.yaml > /dev/null 2>&1
    popd > /dev/null
 fi
 

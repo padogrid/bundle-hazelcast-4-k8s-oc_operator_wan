@@ -23,8 +23,7 @@ OPTIONS
              'wan2' deletses resources in the '$PROJECT_WAN2' project.
 
    -all
-             If specified then it also deletes the 'padogrid-pvc' persistent claim along with
-             'local-storage'.
+             If specified then it also deletes the 'padogrid-pvc' persistent claim.
 
 EOF
 exit
@@ -47,5 +46,4 @@ oc delete all -l app=padogrid
 if [ "$ALL" == "true" ]; then
    echo "Deleting PadoGrid pvc, pv, and local-storage..."
    oc delete --namespace=$NAMESPACE pvc padogrid-pvc
-   oc delete --namespace=$NAMESPACE -f $APP_DIR/cluster/pv-hostPath.yaml > /dev/null 2>&1
 fi
