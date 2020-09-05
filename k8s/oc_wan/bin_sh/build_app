@@ -50,12 +50,12 @@ for i in $(seq 1 2); do
    cp -r $APP_DIR/templates/common/* $APP_DIR/wan$i/
    cp -r $APP_DIR/templates/wan$i/* $APP_DIR/wan$i/
    pushd $APP_DIR/wan$i/hazelcast > /dev/null
-   sed -i 0 "s/\${PROJECT_NAMESPACE}/$PROJECT_NAMESPACE/" *.yaml
-   sed -i 0 "s/<base64-hz-license-key>/$IMDG_LICENSE_KEY_BASE64/" secret.yaml
+   sed -i${__SED_BACKUP} "s/\${PROJECT_NAMESPACE}/$PROJECT_NAMESPACE/" *.yaml
+   sed -i${__SED_BACKUP} "s/<base64-hz-license-key>/$IMDG_LICENSE_KEY_BASE64/" secret.yaml
    rm *.yaml0
    popd > /dev/null
    pushd $APP_DIR/wan$i/padogrid > /dev/null
-   sed -i 0 "s/\${PROJECT_NAMESPACE}/$PROJECT_NAMESPACE/" *.yaml
+   sed -i${__SED_BACKUP} "s/\${PROJECT_NAMESPACE}/$PROJECT_NAMESPACE/" *.yaml
    rm *.yaml0
    popd > /dev/null
    sed "s/\${PROJECT_NAMESPACE}/$PROJECT_NAMESPACE/" $APP_DIR/templates/cluster/wan$i-netpol.yaml > $APP_DIR/cluster/wan$i-netpol.yaml

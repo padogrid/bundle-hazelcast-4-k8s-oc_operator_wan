@@ -320,7 +320,14 @@ exit
 
 ## Teardown
 
-[Always include teardown steps]
+```bash
+cd_k8s oc_wan; cd bin_sh
+./cleanup -all
+
+# Delete projects
+oc delete $PROJENCT_WAN1
+oc delete $PROJENCT_WAN2
+```
 
 ## References
 

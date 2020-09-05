@@ -14,9 +14,19 @@
 # APP_ETC_DIR - App etc dir
 
 #
+# SED backup prefix
+#
+if [[ ${OS_NAME} == DARWIN* ]]; then
+   # Mac - space required
+   __SED_BACKUP=" 0"
+else
+   __SED_BACKUP="0"
+fi
+
+#
 # Follow the instructions in README.md using the following environment variable.
 #
-export HAZELCAST_OPENSHIFT_DIR=$PADOGRID_WORKSPACE/k8s/oc_operator
+export HAZELCAST_OPENSHIFT_DIR=$PADOGRID_WORKSPACE/k8s/oc_wan
 
 #
 # Default Kubernetes (OpenShift) project names.

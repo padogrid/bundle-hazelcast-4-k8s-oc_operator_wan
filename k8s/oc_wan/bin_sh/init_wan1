@@ -41,8 +41,8 @@ done
 
 cp -r $APP_DIR/templates/wan1/hazelcast/hazelcast.yaml $APP_DIR/wan1/hazelcast/
 pushd $APP_DIR/wan1/hazelcast > /dev/null
-sed -i 0 "s/\${PROJECT_NAMESPACE}/$PROJECT_WAN1/" hazelcast.yaml
-sed -i 0 "s/\${WAN_TARGET_END_POINTS}/$MEMBER_ADDRESSES/" hazelcast.yaml
+sed -i${__SED_BACKUP} "s/\${PROJECT_NAMESPACE}/$PROJECT_WAN1/" hazelcast.yaml
+sed -i${__SED_BACKUP} "s/\${WAN_TARGET_END_POINTS}/$MEMBER_ADDRESSES/" hazelcast.yaml
 rm hazelcast.yaml0
 popd > /dev/null
 
