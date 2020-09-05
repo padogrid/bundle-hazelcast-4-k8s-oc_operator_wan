@@ -1,1 +1,1 @@
-[Enter your header description here. Try to limit to two lines. This will be shown when you execute `show_bundle -header`.]
+This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) Hazlecast clusters running on OpenShift.
