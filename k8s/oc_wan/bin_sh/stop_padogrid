@@ -42,7 +42,7 @@ else
 fi
 
 echo "Deleting PadoGrid..."
-oc delete all -l app=padogrid
+oc delete all -l app=padogrid --namespace=$NAMESPACE
 if [ "$ALL" == "true" ]; then
    echo "Deleting PadoGrid pvc, pv, and local-storage..."
    oc delete --namespace=$NAMESPACE pvc padogrid-pvc
