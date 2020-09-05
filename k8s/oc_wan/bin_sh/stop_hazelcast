@@ -37,20 +37,17 @@ else
 fi
 
 echo ""
-echo "WAN=$WAN"
-echo "NAMESPACE=$NAMESPACE"
+echo "    WAN: $WAN"
+echo "Project: $NAMESPACE"
 echo ""
 
 echo "Deleting Hazelcast resources..."
 pushd $APP_DIR/$WAN/hazelcast > /dev/null
-oc delete --namespace=$NAMESPACE -f hazelcast.yaml
-oc delete --namespace=$NAMESPACE -f secret.yaml
-oc delete --namespace=$NAMESPACE -f operator-rhel.yaml
-# Patch required. Otherwise, CRD delete will hang.
-oc patch --namespace=$NAMESPACE crd/hazelcastenterprises.hazelcast.com -p '{"metadata":{"finalizers":[]}}' --type=merge
-oc delete --namespace=$NAMESPACE -f hazelcastcluster.crd.yaml
-oc delete --namespace=$NAMESPACE -f hazelcast-rbac.yaml
-oc delete --namespace=$NAMESPACE -f operator-rbac.yaml
+oc delete -f hazelcast.yaml
+oc delete -f secret.yaml
+oc delete -f operator-rhel.yaml
+oc delete -f hazelcast-serviceaccount.yaml
+oc delete -f operator-serviceaccount.yaml
 popd > /dev/null
 
 # Delete the rest if ALL specified

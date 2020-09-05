@@ -10,7 +10,6 @@ metadata:
     # hazelcast and role labels for project-to-project communications via NetworkPolicy
     hazelcast: "true"
     role: hazelcast
-  namespace: ${PROJECT_NAMESPACE}
 spec:
   group: hazelcast.com
   names:
