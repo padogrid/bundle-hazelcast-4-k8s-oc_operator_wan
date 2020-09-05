@@ -12,7 +12,7 @@ install_bundle -download bundle-hazelcast-4-k8s-oc_wan
 
 [Enter detailed use case descriptions including one or more diagrams.]
 
-![Bundle Template Diagram](/images/bundle-template.jpg)
+![OC WAN Diagram](/images/oc-wan.jpg)
 
 ## Required Software
 
