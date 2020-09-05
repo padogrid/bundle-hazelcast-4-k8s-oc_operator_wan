@@ -76,7 +76,41 @@ oc new-project $PROJECT_WAN1
 oc new-project $PROJECT_WAN2
 ```
 
-## 2. Build Local Environment
+## 2. CRC Users: Create Mountable Persistent Volumes in Master Node
+
+**If you are connected to OCP then you can skip this section.**
+
+If you are logged onto CRC running on your local PC instead of OpenShift Container Platform (OCP), then we need to create additional persistent volumes using **hostPath** for PadoGrid. Let’s create these volumes in the master node as follows.
+
+```bash
+# Login to the master node
+ssh -i ~/.crc/machines/crc/id_rsa core@$(crc ip)
+
+# Create hostPath volumes. We only need one but let's create two (2)
+# in case you want to run addional pods.
+sudo mkdir -p /mnt/vol1
+sudo mkdir -p /mnt/vol2
+sudo chmod -R 777 /mnt/vol1
+sudo chmod -R 777 /mnt/vol2
+sudo chcon -R -t svirt_sandbox_file_t /mnt/vol1 /mnt/vol2
+sudo restorecon -R /mnt/vol1 /mnt/vol2
+exit
+```
+
+We will use the volumes created as follows:
+
+| Container     | CDC File               | Container Path           | Volume Path |
+| ------------- | ---------------------- | ------------------------ | ----------- |
+| PadoGrid      | padogrid/padogrid.yaml | /opt/padogrid/workspaces | /mnt/vol?   |
+
+We can now create the required persistent volumes using **hostPath** by executing the following.
+
+```bash
+cd_k8s oc_operator; cd padogrid
+oc create -f pv-hostPath.yaml
+```
+
+## 3. Build Local Environment
 
 Run `build_app` to intialize your local environment.
 
@@ -90,7 +124,7 @@ The `build_app` script performs the following:
 - Createis`netpol`, `wan1`, and `wan2` directories containing OpenShift configuration files.
 - Updates `secret.yaml` with the encrypted Hazelcast license key.
 
-## 3. Add User to `anyuid` SCC (Security Context Constraints)
+## 4. Add User to `anyuid` SCC (Security Context Constraints)
 
 PadoGrid runs as a non-root user that requires read/write permissions to the persistent volume. Let's add your project's default user to the anyuid SCC.
 
@@ -107,7 +141,7 @@ users:
 - system:serviceaccount:wan2:default
 ```
 
-## 4. Initialize OpenShift Cluster
+## 5. Initialize OpenShift Cluster
 
 We need to setup cluster-level objects to enable project-to-project communications. The `init_cluster` script is provided to accomplish the following:
 
@@ -138,7 +172,7 @@ oc get netpol <name> -o yaml
 
 :memo: NetworkPolicy is project scoped such that it will be deleted when the project is deleted.
 
-## 5.1. Launch Hazelcast in `$PROJECT_WAN2`
+## 6.1. Launch Hazelcast in `$PROJECT_WAN2`
 
 Launch the Hazelcast cluster in the `$PROJECT_WAN2` project first. Since Hazelcast currently does not provide the WAN discovery service, we must first start the target cluster and get the its member cluster IP addresses.
 
@@ -168,7 +202,7 @@ Hazelcast Cluster IP Addresses Determined:
 Service DNS: hz-hazelcast-enterprise.wan2.svc.cluster.local
 ```
 
-## 5.2. Launch Hazelcast in `$PROJECT_WAN1`
+## 6.2. Launch Hazelcast in `$PROJECT_WAN1`
 
 Once `$PROJECT_WAN2` cluster has all the Hazelcast members running, run the `init_wan1` script to intialize the Hazelcast configuration files for the `$PROJECT_WAN1` project. The `init_wan1` script updates the `wan1/hazelcast/hazelcast.yaml` file with the `$PROJECT_WAN2` Hazelcast IP addresses for the WAN publisher.
 
@@ -184,7 +218,7 @@ cd_k8s oc_wan; cd bin_sh
 ./start_hazelcast wan1
 ```
 
-## 6. Create Routes
+## 7. Create Routes
 
 View services:
 
@@ -262,7 +296,7 @@ Open the browser with both Mangement Center URLs and login. Place the brower win
 
 ![WAN2 Management Center](images/wan2-mancenter.png)
 
-## 7. Start PadoGrid
+## 8. Start PadoGrid
 
 Start PadoGrid in the `$PROJECT_WAN1` project. We will use PadoGrid to ingest data into the **wan1** cluster, which in turn will replicate the data to the **wan2** cluster. 
 
@@ -271,7 +305,7 @@ cd_k8s oc_wan; cd bin_sh
 ./start_padogrid wan1
 ```
 
-## 8. Ingest Data to `$PROJECT_WAN1`
+## 9. Ingest Data to `$PROJECT_WAN1`
 
 Login to the PadoGrid pod in the first project, i.e., `$PROJECT_WAN1`.
 
