@@ -85,8 +85,8 @@ cd_k8s oc_wan; cd bin_sh
 
 The `build_app` script performs the following:
 
-- Create `netpol`, `wan1`, and `wan2` directories containing repective OpenShift configuration files.
-- Update `secret.yaml` with encrypted Hazelcast license key.
+- Createis`netpol`, `wan1`, and `wan2` directories containing OpenShift configuration files.
+- Updates `secret.yaml` with the encrypted Hazelcast license key.
 
 ## 3. Add User to `anyuid` SCC (Security Context Constraints)
 
@@ -105,19 +105,25 @@ users:
 - system:serviceaccount:wan2:default
 ```
 
-## 4. Create NetworkPolicy Objects
+## 4. Initialize OpenShift Cluster
 
-UKCloud supports `redhat/openshift-ovs-networkpolicy`, which allows communications between projects. Execute the following to create **NetworkPolicy** objects. Please see [1] and [2] for details.
+We need to setup cluster-level objects to enable project-to-project communications. The `init_cluster` script is provided to accomplish the following:
+
+- Create **NetworkPolicy** Objects for both projects
+- Apply **CustomResourceDefintion** for Hazelcast Operator
+- Apply **ClusterRole** for Hazelcast Operator and Hazelcast
+
+:memo: UKCloud supports `redhat/openshift-ovs-networkpolicy`, which allows communications between projects. Please see [1] and [2] for details.
 
 ```bash
 cd_k8s oc_wan; cd bin_sh
-./create_netpol
+./init_cluster
 ```
 
 You can view the NetworkPolicy objects as follows.
 
 ```bash
-# Veriify the cluster has 'ovs-networkpolicy'
+# Verify the cluster has 'ovs-networkpolicy'
 oc get clusternetwork
 
 # List NetworkPolicy objects in the current project
@@ -129,6 +135,8 @@ oc describe netpol <name>
 # Display ywam output of the named NetworkPolicy object
 oc get netpol <name> -o yaml
 ```
+
+:memo: NetworkPolicy is project scoped such that it will be deleted when the project is deleted.
 
 ## 5.1. Launch Hazelcast in `$PROJECT_WAN2`
 
@@ -245,6 +253,14 @@ WAN2: http://hz-hazelcast-enterprise-mancenter-wan2.apps.7919-681139.cor00005-2.
 ### Monitor WAN Replication
 
 Open the browser with both Mangement Center URLs and login. Place the brower windows side by side and monitor the WAN replication activities.
+
+**WAN1 Management Center**
+
+![WAN1 Management Center](images/wan1-mancenter.png)
+
+**WAN2 Management Center**
+
+![WAN2 Management Center](images/wan2-mancenter.png)
 
 ## 7. Start PadoGrid
 
