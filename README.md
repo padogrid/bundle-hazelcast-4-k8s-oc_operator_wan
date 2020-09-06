@@ -28,7 +28,7 @@ oc_wan/
 ├── bin_sh
 │   ├── build_app
 │   ├── cleanup
-│   ├── create_netpol
+│   ├── init_cluster
 │   ├── init_wan1
 │   ├── login_padogrid_pod
 │   ├── setenv.sh
@@ -38,10 +38,10 @@ oc_wan/
 │   ├── stop_hazelcast
 │   └── stop_padogrid
 └── templates
-    ├── common
-    ├── netpol
-    ├── wan1
-    └── wan2
+    ├── cluster
+    ├── common
+    ├── wan1
+    └── wan2
 ```
 
 ## 1. Create Projects
@@ -121,7 +121,7 @@ cd_k8s oc_wan; cd bin_sh
 
 The `build_app` script performs the following:
 
-- Createis`netpol`, `wan1`, and `wan2` directories containing OpenShift configuration files.
+- Creates`cluster`, `wan1`, and `wan2` directories containing OpenShift configuration files.
 - Updates `secret.yaml` with the encrypted Hazelcast license key.
 
 ## 4. Add User to `anyuid` SCC (Security Context Constraints)
@@ -174,7 +174,7 @@ oc get netpol <name> -o yaml
 
 ## 6.1. Launch Hazelcast in `$PROJECT_WAN2`
 
-Launch the Hazelcast cluster in the `$PROJECT_WAN2` project first. Since Hazelcast currently does not provide the WAN discovery service, we must first start the target cluster and get the its member cluster IP addresses.
+Launch the Hazelcast cluster in the `$PROJECT_WAN2` project first. Since Hazelcast currently does not provide the WAN discovery service, we must first start the target cluster and get its member cluster IP addresses.
 
 ```bash
 cd_k8s oc_wan; cd bin_sh
@@ -278,7 +278,9 @@ NAME                                HOST/PORT                                   
 hz-hazelcast-enterprise-mancenter   hz-hazelcast-enterprise-mancenter-wan2.apps.7919-681139.cor00005-2.cna.ukcloud.com          hz-hazelcast-enterprise-mancenter   http                 None
 ```
 
-Management Center URL:
+Management Center URLs:
+
+Use your HOST/PORT names to form the Managemen Center URLs. For our example above, the Management Center URLs are as follows:
 
 WAN1: http://hz-hazelcast-enterprise-mancenter-wan1.apps.7919-681139.cor00005-2.cna.ukcloud.com
 
@@ -286,7 +288,7 @@ WAN2: http://hz-hazelcast-enterprise-mancenter-wan2.apps.7919-681139.cor00005-2.
 
 ### Monitor WAN Replication
 
-Open the browser with both Mangement Center URLs and login. Place the brower windows side by side and monitor the WAN replication activities.
+Open the browser with both Mangement Center URLs and login using the user name `admin` and the password of your choice. Place the brower windows side by side and monitor the WAN replication activities. The following figures show the Management Center views after we have ingested data in [Section 9](#9-ingest-data-to-project_wan1).
 
 **WAN1 Management Center**
 
@@ -332,7 +334,7 @@ cd_app perf_test
 vi etc/hazelcast-client.xml
 ```
 
-Replace the `<cluster-members>` element with the following in the `etc/hazelcast-client.xml` file. `hz-hazelcast-enterprise` is service and  `wan1` is the project name. This will connect `perf_test` to the Hazelcast cluster running in the `wan1` project. Make sure to replace `wan1` with your first project name, i.e., $PROJECT_WAN1.
+Replace the `<cluster-members>` element with the following `<kubernetes>` element in the `etc/hazelcast-client.xml` file. We form the service DNS with the service, `hz-hazelcast-enterprise`, and the project, `wan1` following the Kubernetes naming conventions. This will connect `perf_test` to the Hazelcast cluster running in the `wan1` project. Make sure to replace `wan1` with your first project name, i.e., $PROJECT_WAN1.
 
 ```xml
                 <kubernetes enabled="true">
@@ -385,11 +387,12 @@ exit
 
 ## Teardown
 
+:exclamation:! The cleanup script may hang due to a known customer resource finalizer issue [3]. If it hangs, then Ctrl+C and run it again. The `cleanp` script remove the CRD finalizers before deleting the CRD but you might need to run it twice to overcome the hanging issue.
+
 ```bash
 cd_k8s oc_wan; cd bin_sh
 
-# Cleanup all. This command hangs while deleting customeresourcedefinition (crd) thne
-# run it again.
+# Cleanup all. Run it again if it hangs.
 ./cleanup -all
 
 # Delete projects
@@ -401,3 +404,4 @@ oc delete $PROJENCT_WAN2
 
 1. How to use NetworkPolicy objects to connect services between projects, https://docs.ukcloud.com/articles/openshift/oshift-how-use-netpol.html
 2. Network Polices, https://kubernetes.io/docs/concepts/services-networking/network-policies/
+3. Custom resources with finalizers can "deadlock" customresourcecleanup.apiextensions.k8s.io finalizer #60538, https://github.com/kubernetes/kubernetes/issues/60538
