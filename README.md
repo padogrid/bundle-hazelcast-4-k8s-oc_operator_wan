@@ -1,11 +1,11 @@
-# Hazelcast OpenShift Operator WAN Replication
+# Hazelcast WAN Replication on OpenShift using Operator
 
-This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) Hazlecast clusters running on OpenShift.
+This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) Hazlecast Operator clusters running on OpenShift.
 
 ## Installing Bundle
 
 ```bash
-install_bundle -download bundle-hazelcast-4-k8s-oc_wan
+install_bundle -download bundle-hazelcast-4-k8s-oc_operator_wan
 ```
 
 ## Use Case
