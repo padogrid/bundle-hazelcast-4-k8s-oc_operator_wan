@@ -12,7 +12,7 @@ install_bundle -download bundle-hazelcast-4-k8s-oc_operator_wan
 
 This bundle installs PadoGrid and Hazelcast containers in two separate projects with WAN replication enabled. As shown in the diagram below, PadoGrid is used to ingest data into the first cluster named **wan1** which in turn publishes data to the second cluster named **wan2**. It includes scripts for starting and stopping containers per project.
 
-![OC WAN Diagram](/images/oc-wan.jpg)
+![OC WAN Diagram](images/oc-operator-wan.jpg)
 
 ## Required Software
 
