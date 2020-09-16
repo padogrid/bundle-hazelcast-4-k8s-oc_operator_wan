@@ -24,7 +24,7 @@ This bundle installs PadoGrid and Hazelcast containers in two separate projects 
 ## Directory Tree View
 
 ```console
-oc_wan/
+oc_operator_wan/
 ├── bin_sh
 │   ├── build_app
 │   ├── cleanup
@@ -49,7 +49,7 @@ oc_wan/
 This bundle requires two (2) OpenShift projects. It is preconfigured with the project names, **wan1** and **wan2**. You can change the project names in the `setenv.sh` file as follows.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 vi setenv.sh
 ```
 
@@ -65,7 +65,7 @@ export PROJECT_WAN2="wan2"
 Source in the `setenv.sh` file.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 . ./setenv.sh
 ```
 
@@ -115,7 +115,7 @@ oc create -f pv-hostPath.yaml
 Run `build_app` to intialize your local environment.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./build_app
 ```
 
@@ -150,7 +150,7 @@ We need to setup cluster-level objects to enable project-to-project communicatio
 - Apply **ClusterRole** for Hazelcast Operator and Hazelcast
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./init_cluster
 ```
 
@@ -177,7 +177,7 @@ oc get netpol <name> -o yaml
 Launch the Hazelcast cluster in the `$PROJECT_WAN2` project first. Since Hazelcast currently does not provide the WAN discovery service, we must first start the target cluster and get its member cluster IP addresses.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./start_hazelcast wan2
 ```
 
@@ -207,14 +207,14 @@ Service DNS: hz-hazelcast-enterprise.wan2.svc.cluster.local
 Once `$PROJECT_WAN2` cluster has all the Hazelcast members running, run the `init_wan1` script to intialize the Hazelcast configuration files for the `$PROJECT_WAN1` project. The `init_wan1` script updates the `wan1/hazelcast/hazelcast.yaml` file with the `$PROJECT_WAN2` Hazelcast IP addresses for the WAN publisher.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./init_wan1
 ```
 
 Now, launch the Hazelcast cluster in the `$PROJECT_WAN1` project.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./start_hazelcast wan1
 ```
 
@@ -305,14 +305,14 @@ Start PadoGrid in the `$PROJECT_WAN1` project. We will use PadoGrid to ingest da
 ### CRC Users
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./start_padogrid wan1 local-storage
 ```
 
 ### OCP Users
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 ./start_padogrid wan1
 ```
 
@@ -321,7 +321,7 @@ cd_k8s oc_wan; cd bin_sh
 Login to the PadoGrid pod in the first project, i.e., `$PROJECT_WAN1`.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 oc project $PROJECT_WAN1
 ./login_padogrid_pod
 ```
@@ -390,7 +390,7 @@ exit
 :exclamation: The cleanup script may hang due to a known customer resource finalizer issue [3]. If it hangs, then Ctrl+C and run it again. The `cleanp` script remove the CRD finalizers before deleting the CRD but you might need to run it twice to overcome the hanging issue.
 
 ```bash
-cd_k8s oc_wan; cd bin_sh
+cd_k8s oc_operator_wan; cd bin_sh
 
 # Cleanup all. Run it again if it hangs.
 ./cleanup -all

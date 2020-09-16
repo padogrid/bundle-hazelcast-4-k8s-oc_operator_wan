@@ -52,14 +52,3 @@ oc apply -f operator-rhel.yaml
 oc apply -f secret.yaml
 oc apply -f hazelcast.yaml
 popd > /dev/null
-exit
-
-pushd $APP_DIR/$WAN/hazelcast > /dev/null
-oc apply --namespace=$NAMESPACE -f operator-rbac.yaml
-oc apply --namespace=$NAMESPACE -f serviceaccount.yaml
-#oc apply --namespace=$NAMESPACE -f hazelcast-rbac.yaml
-#oc apply --namespace=$NAMESPACE -f hazelcastcluster.crd.yaml
-oc apply --namespace=$NAMESPACE -f operator-rhel.yaml
-oc apply --namespace=$NAMESPACE -f secret.yaml
-oc apply --namespace=$NAMESPACE -f hazelcast.yaml
-popd > /dev/null
