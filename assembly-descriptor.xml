@@ -20,8 +20,8 @@
 		
 		<!-- Executable permissions -->
 		<fileSet>
-			<directory>k8s/oc_wan/bin_sh/</directory>
-			<outputDirectory>k8s/oc_wan/bin_sh/</outputDirectory>
+			<directory>k8s/oc_operator_wan/bin_sh/</directory>
+			<outputDirectory>k8s/oc_operator_wan/bin_sh/</outputDirectory>
 			<includes>
 				<include>**</include>
 			</includes>
