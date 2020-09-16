@@ -2,6 +2,8 @@
 
 This bundle demonstrates the Hazelcast WAN topology by replicating data between two (2) Hazlecast Operator clusters running on OpenShift.
 
+[https://github.com/hazelcast/hazelcast-operator](https://github.com/hazelcast/hazelcast-operator)
+
 ## Installing Bundle
 
 ```bash
